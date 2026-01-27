@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Typing Practice Levels</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f172a;
+  --card:#1e293b;
+  --text:#e2e8f0;
+  --accent:#38bdf8;
+  --error:#ef4444;
+  --success:#22c55e;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif}
+body{
+  background:var(--bg);
+  color:var(--text);
+  padding:15px;
+}
+.container{
+  max-width:1000px;
+  margin:auto;
+  background:var(--card);
+  padding:20px;
+  border-radius:20px;
+  box-shadow:0 0 25px rgba(0,0,0,.4);
+}
+h1{text-align:center;margin-bottom:5px}
+.credit{text-align:center;font-size:13px;opacity:.7;margin-bottom:10px}
+
+.controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:center;
+  margin-bottom:10px;
+}
+button, select{
+  padding:8px 14px;
+  border-radius:25px;
+  border:2px solid var(--accent);
+  background:transparent;
+  color:var(--text);
+  cursor:pointer;
+  transition:.3s;
+}
+button:hover, select:hover{
+  background:var(--accent);
+  color:#fff;
+  transform:scale(1.05);
+}
+
+.text-display{
+  background:#0b1220;
+  padding:12px;
+  border-radius:10px;
+  min-height:70px;
+  margin-bottom:8px;
+  line-height:1.5;
+  font-size:14px;
+}
+.correct{color:var(--success)}
+.incorrect{color:var(--error)}
+
+textarea{
+  width:100%;
+  height:80px;
+  border-radius:10px;
+  border:none;
+  padding:10px;
+  resize:none;
+  font-size:14px;
+  outline:2px solid var(--accent);
+  background:#0b1220;
+  color:#fff;
+  margin-bottom:10px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(100px,1fr));
+  gap:8px;
+  text-align:center;
+  margin-bottom:15px;
+}
+.stat-box{
+  background:#0b1220;
+  padding:8px;
+  border-radius:8px;
+  font-size:13px;
+}
+
+/* Keyboard */
+.keyboard{margin-top:10px}
+.row{display:flex;justify-content:center;margin-bottom:5px}
+.key{
+  border:2px solid var(--accent);
+  border-radius:6px;
+  padding:8px 10px;
+  margin:2px;
+  min-width:32px;
+  text-align:center;
+  font-size:12px;
+  transition:.1s;
+}
+.key.active{
+  background:var(--accent);
+  color:#fff;
+  transform:scale(.95);
+}
+.space{min-width:200px}
+
+@media(max-width:600px){
+  .key{min-width:24px;padding:6px;font-size:10px}
+  .space{min-width:120px}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Typing Practice Levels</h1>
+  <div class="credit">Made by Priyanshu Yadav</div>
+
+  <div class="controls">
+    <select id="levelSelect"></select>
+    <button onclick="startTest()">Start</button>
+    <button onclick="resetTest()">Reset</button>
+  </div>
+
+  <div class="text-display" id="textDisplay"></div>
+  <textarea id="inputArea" placeholder="Start typing..." disabled></textarea>
+
+  <div class="stats">
+    <div class="stat-box">⚡ WPM: <span id="wpm">0</span></div>
+    <div class="stat-box">🎯 Accuracy: <span id="accuracy">100%</span></div>
+    <div class="stat-box">❌ Mistakes: <span id="mistakes">0</span></div>
+  </div>
+
+  <!-- Keyboard -->
+  <div class="keyboard" id="keyboard"></div>
+</div>
+
+<script>
+const levels = [
+"cat dog sun hat pen cup",
+"red blue green white black",
+"this is a fun typing test",
+"practice daily to type fast",
+"coding is fun and creative",
+"javascript makes websites alive",
+"keep your fingers on home row",
+"accuracy is more important than speed",
+"hard work beats talent every time",
+"success comes with constant practice"
+];
+
+const levelSelect = document.getElementById("levelSelect");
+levels.forEach((_,i)=>{
+  const opt=document.createElement("option");
+  opt.value=i;
+  opt.textContent="Level "+(i+1);
+  levelSelect.appendChild(opt);
+});
+
+const textDisplay=document.getElementById("textDisplay");
+const inputArea=document.getElementById("inputArea");
+
+let mistakes=0,startTime;
+
+// Load text
+function loadText(level){
+  textDisplay.innerHTML="";
+  levels[level].split("").forEach(ch=>{
+    const span=document.createElement("span");
+    span.innerText=ch;
+    textDisplay.appendChild(span);
+  });
+}
+
+function startTest(){
+  loadText(levelSelect.value);
+  inputArea.disabled=false;
+  inputArea.value="";
+  inputArea.focus();
+  mistakes=0;
+  startTime=new Date();
+}
+
+function resetTest(){
+  inputArea.value="";
+  inputArea.disabled=true;
+  textDisplay.innerHTML="";
+  document.getElementById("wpm").innerText=0;
+  document.getElementById("accuracy").innerText="100%";
+  document.getElementById("mistakes").innerText=0;
+}
+
+inputArea.addEventListener("input",()=>{
+  const entered=inputArea.value.split("");
+  const spans=textDisplay.querySelectorAll("span");
+  mistakes=0;
+
+  spans.forEach((span,i)=>{
+    const ch=entered[i];
+    if(!ch){span.className="";}
+    else if(ch===span.innerText){span.className="correct";}
+    else{span.className="incorrect";mistakes++;}
+  });
+
+  const time=(new Date()-startTime)/1000/60;
+  const words=inputArea.value.trim().split(/\s+/).length;
+  const wpm=Math.round(words/time || 0);
+  const acc=Math.max(0,Math.round(((entered.length-mistakes)/entered.length)*100))||100;
+
+  document.getElementById("wpm").innerText=wpm;
+  document.getElementById("accuracy").innerText=acc+"%";
+  document.getElementById("mistakes").innerText=mistakes;
+});
+
+/* Keyboard Layout */
+const keys=[
+["q","w","e","r","t","y","u","i","o","p"],
+["a","s","d","f","g","h","j","k","l"],
+["z","x","c","v","b","n","m"],
+[" "]
+];
+
+const keyboard=document.getElementById("keyboard");
+
+keys.forEach(row=>{
+  const rowDiv=document.createElement("div");
+  rowDiv.className="row";
+  row.forEach(k=>{
+    const key=document.createElement("div");
+    key.className="key"+(k===" "?" space":"");
+    key.dataset.key=k;
+    key.textContent=k===" "?"Space":k;
+    rowDiv.appendChild(key);
+  });
+  keyboard.appendChild(rowDiv);
+});
+
+document.addEventListener("keydown",e=>{
+  const k=e.key.toLowerCase();
+  const keyEl=document.querySelector(`.key[data-key="${k}"]`);
+  if(keyEl) keyEl.classList.add("active");
+});
+
+document.addEventListener("keyup",e=>{
+  const k=e.key.toLowerCase();
+  const keyEl=document.querySelector(`.key[data-key="${k}"]`);
+  if(keyEl) keyEl.classList.remove("active");
+});
+</script>
+
+</body>
+</html>
