@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Typing Practice Levels</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="icon" href="logo.png" type="image/x-icon"
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="logo.png" type="image/x-icon">
 <style>
 :root{
   --bg:#0f172a;
@@ -15,7 +15,7 @@
   --error:#ef4444;
   --success:#22c55e;
 }
-*{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
 body{
   background:var(--bg);
   color:var(--text);
@@ -25,27 +25,28 @@ body{
   max-width:1000px;
   margin:auto;
   background:var(--card);
-  padding:20px;
-  border-radius:20px;
-  box-shadow:0 0 25px rgba(0,0,0,.4);
+  padding:25px;
+  border-radius:25px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
 }
-h1{text-align:center;margin-bottom:5px}
-.credit{text-align:center;font-size:13px;opacity:.7;margin-bottom:10px}
+h1{text-align:center;margin-bottom:5px;font-weight:700; background:linear-gradient(90deg,#38bdf8,#6366f1); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
+.credit{text-align:center;font-size:13px;opacity:.7;margin-bottom:15px;}
 
 .controls{
   display:flex;
   flex-wrap:wrap;
-  gap:10px;
+  gap:12px;
   justify-content:center;
-  margin-bottom:10px;
+  margin-bottom:15px;
 }
 button, select{
-  padding:8px 14px;
+  padding:10px 18px;
   border-radius:25px;
   border:2px solid var(--accent);
   background:transparent;
   color:var(--text);
   cursor:pointer;
+  font-weight:600;
   transition:.3s;
 }
 button:hover, select:hover{
@@ -56,63 +57,68 @@ button:hover, select:hover{
 
 .text-display{
   background:#0b1220;
-  padding:12px;
-  border-radius:10px;
-  min-height:70px;
-  margin-bottom:8px;
-  line-height:1.5;
-  font-size:14px;
+  padding:15px;
+  border-radius:15px;
+  min-height:90px;
+  margin-bottom:10px;
+  line-height:1.6;
+  font-size:15px;
+  overflow-wrap: break-word;
+  border:2px solid #1e293b;
 }
-.correct{color:var(--success)}
-.incorrect{color:var(--error)}
+.correct{color:var(--success);}
+.incorrect{color:var(--error);}
 
 textarea{
   width:100%;
-  height:80px;
-  border-radius:10px;
+  height:100px;
+  border-radius:15px;
   border:none;
-  padding:10px;
+  padding:12px;
   resize:none;
-  font-size:14px;
+  font-size:15px;
   outline:2px solid var(--accent);
   background:#0b1220;
   color:#fff;
-  margin-bottom:10px;
+  margin-bottom:15px;
 }
 
 .stats{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(100px,1fr));
-  gap:8px;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:10px;
   text-align:center;
-  margin-bottom:15px;
+  margin-bottom:20px;
 }
 .stat-box{
   background:#0b1220;
-  padding:8px;
-  border-radius:8px;
-  font-size:13px;
+  padding:10px;
+  border-radius:12px;
+  font-size:14px;
+  box-shadow:inset 0 0 8px rgba(0,0,0,0.3);
+  transition:0.3s;
 }
+.stat-box:hover{background:#1f2937;}
 
-/* Keyboard */
-.keyboard{margin-top:10px}
-.row{display:flex;justify-content:center;margin-bottom:5px}
+.keyboard{margin-top:15px}
+.row{display:flex;justify-content:center;margin-bottom:6px}
 .key{
   border:2px solid var(--accent);
-  border-radius:6px;
-  padding:8px 10px;
+  border-radius:8px;
+  padding:10px 12px;
   margin:2px;
-  min-width:32px;
+  min-width:36px;
   text-align:center;
-  font-size:12px;
+  font-size:13px;
   transition:.1s;
+  background:#1e293b;
 }
 .key.active{
   background:var(--accent);
   color:#fff;
-  transform:scale(.95);
+  transform:scale(0.95);
 }
-.space{min-width:200px}
+.space{min-width:220px}
 
 @media(max-width:600px){
   .key{min-width:24px;padding:6px;font-size:10px}
@@ -141,7 +147,6 @@ textarea{
     <div class="stat-box">❌ Mistakes: <span id="mistakes">0</span></div>
   </div>
 
-  <!-- Keyboard -->
   <div class="keyboard" id="keyboard"></div>
 </div>
 
@@ -172,7 +177,6 @@ const inputArea=document.getElementById("inputArea");
 
 let mistakes=0,startTime;
 
-// Load text
 function loadText(level){
   textDisplay.innerHTML="";
   levels[level].split("").forEach(ch=>{
@@ -237,7 +241,7 @@ keys.forEach(row=>{
   rowDiv.className="row";
   row.forEach(k=>{
     const key=document.createElement("div");
-    key.className="key"+(k===" "?" space":"");
+    key.className='key'+(k===" "?" space":"");
     key.dataset.key=k;
     key.textContent=k===" "?"Space":k;
     rowDiv.appendChild(key);
